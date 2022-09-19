@@ -1,0 +1,1 @@
+double initBallSize = 100;

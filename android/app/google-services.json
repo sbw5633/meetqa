@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "665160386322",
+    "project_id": "meetqa-1283d",
+    "storage_bucket": "meetqa-1283d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665160386322:android:ce351837cf7d5382bad5cb",
+        "android_client_info": {
+          "package_name": "com.example.meetqa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665160386322-639h1r342egsvibih9ithdipolkv1ou0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meetqa",
+            "certificate_hash": "0d9828da96ac355de65464761fbd8fb715406536"
+          }
+        },
+        {
+          "client_id": "665160386322-78dp92v7rkgndqrh606jlvsr4vaheid1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGN0TIXO0zdpQFRCyPIHILemWhKKSDtes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "665160386322-78dp92v7rkgndqrh606jlvsr4vaheid1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "665160386322-5t2nnl6r9rellj1a7d64g53pgdmj4vbu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.meetqa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

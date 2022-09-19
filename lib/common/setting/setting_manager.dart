@@ -1,0 +1,15 @@
+import 'package:meetqa/common/const/colors.dart';
+
+void setDarkMode(bool isDark) {
+  if (!isDark) {
+    PRIMARY_COLOR = PRIMARY_COLOR_LIGHT;
+    TEXT_COLOR = TEXT_COLOR_LIGHT;
+    INPUT_BG_COLOR = INPUT_BG_COLOR_LIGHT;
+    INPUT_BORDER_COLOR = INPUT_BG_COLOR_LIGHT;
+  } else {
+    PRIMARY_COLOR = PRIMARY_COLOR_DARK;
+    TEXT_COLOR = TEXT_COLOR_DARK;
+    INPUT_BG_COLOR = INPUT_BG_COLOR_DARK;
+    INPUT_BORDER_COLOR = INPUT_BG_COLOR_DARK;
+  }
+}
