@@ -5,12 +5,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:meetqa/common/component/unit/app_bar_bg.dart';
 import 'package:meetqa/common/component/will_pop_scope.dart';
 import 'package:meetqa/question/component/unit/ball_bottle.dart';
-import 'package:meetqa/common/component/chance_card.dart';
+
 import 'package:meetqa/question/component/unit/question_ball.dart';
 import 'package:meetqa/question/component/question_board.dart';
 import 'package:meetqa/common/const/colors.dart';
 import 'package:meetqa/common/const/const_no.dart';
-import 'package:meetqa/common/const/size.dart';
+
 import 'package:meetqa/common/const/user_id.dart';
 import 'package:meetqa/question/model/category_card_model.dart';
 import 'package:meetqa/question/model/question_model.dart';
@@ -24,7 +24,7 @@ class GameScreen extends StatefulWidget {
   final String you;
   final askCate category;
   final List<QuestionModel> questions;
-  GameScreen({
+  const GameScreen({
     Key? key,
     required this.me,
     required this.you,
@@ -126,7 +126,7 @@ class _GameScreenState extends State<GameScreen>
                     ? OutlinedButton(
                         onPressed: () async {
                           try {
-                            await SignManager.signIn();
+                            await SignManager().signIn();
                             if (currentUser != null) {
                               setState(() {});
                             } else {
@@ -143,7 +143,7 @@ class _GameScreenState extends State<GameScreen>
                       )
                     : OutlinedButton(
                         onPressed: () async {
-                          await SignManager.signOut();
+                          await SignManager().signOut();
                           setState(() {});
                         },
                         child: Text(

@@ -28,9 +28,6 @@ class DataManager {
       if (i == 0) {
         _ver = excel.tables[cate]!.rows[i][1]!.value.toString();
 
-        debugPrint("받아온 엑셀(cate: $cate)버전: $_ver");
-        debugPrint("하이브데이터 Version: ${checkBox.get(cate)}");
-
         if (checkBox.values.isNotEmpty && checkBox.get(cate) == _ver) {
           return;
         }
@@ -51,7 +48,7 @@ class DataManager {
         }
         QuestionModel question = QuestionModel(
           index: tempData[0],
-          theme: tempData[1],
+          theme: QuestionModel.parseQuestionTheme(tempData[1]),
           deep: tempData[2],
           asking: tempData[3],
           tag: tempTag,

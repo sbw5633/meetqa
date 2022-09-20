@@ -44,11 +44,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
       stretch: true,
       title: widget.isExpanded ? null : Center(child: titleLogo()),
       actions: [
-        if (nowUser == null && widget.isLoaded == ConnectionState.done)
+        if (nowUser == null && widget.isLoaded == true)
           InkWell(
             onTap: () async {
               try {
-                await SignManager.signIn();
+                await SignManager().signIn();
                 if (currentUser != null) {
                   setState(() {});
                 } else {

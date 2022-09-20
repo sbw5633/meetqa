@@ -51,7 +51,6 @@ class AuthService {
       if (_user != null) {
         FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
-        Hive.box("userData").put("userEmail", _user.email);
         return _user;
       } else {
         flutterToast('로그인에 실패했습니다.');
@@ -65,7 +64,6 @@ class AuthService {
 
   Future<User?> signOut() async {
     await FirebaseAuth.instance.signOut();
-    Hive.box("userData").clear();
     return await guestUser();
   }
 

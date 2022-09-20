@@ -24,14 +24,13 @@ Future<void> main() async {
 
   for (CategoryCardModel cateModel in cateLists) {
     // await Hive.openBox<QuestionModel>('Question_${cateModel.parseCateToKor()}');
-    await Hive.openBox<QuestionModel>(
-        'Question_${cateModel.category.toString()}');
-    debugPrint("opened HiveBox: 'Question_${cateModel.category.toString()}'");
+    await Hive.openBox<QuestionModel>('Question_${cateModel.parstCateToEng()}');
+    debugPrint("opened HiveBox: 'Question_${cateModel.parstCateToEng()}'");
   }
 
   await Hive.openBox("DataVersion");
 
-  await Hive.openBox('userData');
+  await Hive.openBox('UserData');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -43,7 +42,7 @@ Future<void> main() async {
   rewardAdID = Platform.isIOS ? rewardAdTestIDonIOS : rewardAdTestIDonAndroid;
 
   runApp(MaterialApp(
-    theme: ThemeData(fontFamily: 'JejuHallasan'),
+    theme: ThemeData(fontFamily: 'Pretendard'),
     debugShowCheckedModeBanner: false, home: AuthService().handleAuthState(),
     // Matrix4Test()
     // LoginScreen()

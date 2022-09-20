@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/component/will_pop_scope.dart';
 import 'package:meetqa/common/const/ad_id.dart';
 import 'package:meetqa/common/const/user_id.dart';
 import 'package:meetqa/question/model/question_model.dart';
 import 'package:meetqa/common/util/data_utils.dart';
-import 'package:meetqa/common/manager/firebase_manager.dart';
+import 'package:meetqa/z_not_use/firebase_manager.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
 import 'package:meetqa/common/manager/sign_manager.dart';
 
@@ -178,8 +179,7 @@ class QuestionBoard extends StatelessWidget {
     int leftTime = limitTime;
 
     for (int i = 0; i < limitTime; i++) {
-      debugPrint("leftTime($i): $leftTime");
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       yield --leftTime;
     }
@@ -196,20 +196,32 @@ class _SkipButtonAlert extends StatefulWidget {
 class __SkipButtonAlertState extends State<_SkipButtonAlert> {
   RewardedAd? rewardedAd;
 
+  final box = Hive.box("UserData");
+
+  int passTicket = 0;
+
   @override
   void initState() {
     super.initState();
-    // loadRewardAd();
     _createRewardedAd();
+  }
+
+  void refleshTicket() {
+    if (currentUser != null) {
+      setState(() {
+        passTicket = box.get("passTicket");
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    int pass = nowUser == null ? 0 : nowUser!.passTicket;
+    refleshTicket();
+
     return AlertDialog(
       scrollable: true,
       title: Text(
-        nowUser == null ? "guest사용자입니다." : "보유중인 패스권: $pass개",
+        currentUser == null ? "guest사용자입니다." : "보유중인 패스권: $passTicket개",
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
         textAlign: TextAlign.center,
       ),
@@ -249,20 +261,21 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
               ],
             )),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          nowUser == null
+          currentUser == null
               ? TextButton(
                   onPressed: () async {
-                    await SignManager.signIn();
+                    await SignManager().signIn();
                     setState(() {});
                   },
                   child: const Text("로그인"))
               : TextButton(
                   onPressed: () {
-                    if (nowUser!.passTicket <= 0) {
+                    if (passTicket <= 0) {
                       flutterToast("보유중인 패스권이 없습니다.");
                     } else {
-                      nowUser!.passTicket--;
-                      FirebaseManager().updateUserDB(nowUser!);
+                      passTicket--;
+                      updatePassTicket(ticket: passTicket);
+                      // FirebaseManager().updateUserDB(nowUser!);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }
@@ -280,8 +293,6 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
 
   //Load Rewarded Ads
   void _createRewardedAd() {
-    // RewardedAd? _rewardedAd;
-
     RewardedAd.load(
       adUnitId: rewardAdID,
       request: const AdRequest(),
@@ -292,7 +303,7 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
           });
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print('RewardedAd failed to load: $error');
+          debugPrint('RewardedAd failed to load: $error');
           flutterToast("광고 불러오기에 실패했습니다. 네트워크 상태를 확인해주세요.");
           return;
         },
@@ -304,32 +315,34 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
     if (rewardedAd != null) {
       rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
-          print("01. $ad onAdShowFullScreenContent");
+          debugPrint("01. $ad onAdShowFullScreenContent");
         },
         onAdDismissedFullScreenContent: (ad) {
-          print("02. $ad onAdDismissedFulkScreenContent");
+          debugPrint("02. $ad onAdDismissedFulkScreenContent");
           ad.dispose();
 
           _createRewardedAd();
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
-          print("03. $ad onAdFailedToShowFullScreenContent: $error");
+          debugPrint("03. $ad onAdFailedToShowFullScreenContent: $error");
           ad.dispose();
           flutterToast("광고를 불러오는 중입니다. 다시 시도해주세요.");
 
           _createRewardedAd();
         },
         onAdImpression: (ad) {
-          print("04. $ad impression occurred");
+          debugPrint("04. $ad impression occurred");
         },
       );
       rewardedAd!.setImmersiveMode(true);
       rewardedAd!.show(
           onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
         if (nowUser != null && nowUser!.passTicket < 10) {
-          nowUser!.passTicket++;
-          FirebaseManager().updateUserDB(nowUser!);
+          passTicket++;
+
+          updatePassTicket(ticket: passTicket);
+
+          flutterToast("Pass Ticket이 지급되었습니다.");
         }
         Navigator.pop(context);
         Navigator.pop(context);
@@ -347,5 +360,9 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
       style: TextStyle(fontSize: fontSize),
       textAlign: TextAlign.center,
     );
+  }
+
+  void updatePassTicket({required int ticket}) {
+    box.put("passTicket", ticket);
   }
 }

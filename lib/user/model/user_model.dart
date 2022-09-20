@@ -2,7 +2,7 @@ class UserModel {
   final String uid;
   final String? userID;
   final String? userName;
-  int passTicket;
+  final int passTicket;
   final int point;
   final String? phoneNumber;
   final String? photoURL;

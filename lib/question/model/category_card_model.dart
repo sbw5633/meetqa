@@ -51,4 +51,20 @@ class CategoryCardModel {
         return "부부";
     }
   }
+
+  String parstCateToEng() {
+    askCate cate = category;
+    switch (cate) {
+      case askCate.FirstMeet:
+        return "FirstMeet";
+      case askCate.KnowPeople:
+        return "KnowPeople";
+      case askCate.StartCouple:
+        return "StartCouple";
+      case askCate.LongtimeCouple:
+        return "LongtimeCouple";
+      case askCate.Married:
+        return "Married";
+    }
+  }
 }

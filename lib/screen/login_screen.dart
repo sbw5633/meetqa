@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> signIn() async {
     try {
-      await SignManager.signIn();
+      await SignManager().signIn();
 
       if (userName != null) {
         flutterToast("환영합니다");
