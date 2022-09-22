@@ -34,8 +34,10 @@ class SignManager {
   void ticketSetter() {
     final box = Hive.box("UserData");
 
+    print("티켓 box: ${box.keys}");
+
     //신규 유저(noLocalData) 또는 이전 종료가 정상종료였으면 fb에서 받아옴
-    if (box.values.isEmpty || box.get("saved") == "saved") {
+    if (box.get("saved") == null || box.get("saved") == "saved") {
       box.put("passTicket", nowUser!.passTicket);
       box.put("saved", "get");
     }
@@ -112,6 +114,8 @@ class SignManager {
     nowUser = UserModel.fromDB(
       _user.data()!,
     );
+
+    print("록읜 후 nowUser: $nowUser");
 
     ticketSetter();
   }

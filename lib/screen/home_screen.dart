@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         if (currentUser != null) {
           SignManager().ticketSave();
         }
+
         break;
     }
   }
@@ -94,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> getUserData() async {
+    print("currentUser: $currentUser");
     if (currentUser != null) {
       await SignManager().setNowUser();
     }

@@ -91,7 +91,7 @@ class _DataLoadScreenState extends State<DataLoadScreen> {
           builder: (_) => GameScreen(
                 me: name1!,
                 you: name2!,
-                category: widget.cateModel.category,
+                category: widget.cateModel.parstCateToEng(),
                 questions: questions,
               )));
     }

@@ -21,10 +21,13 @@ class QuestionBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle titleTs = TextStyle(
-        fontSize: 36, fontWeight: FontWeight.w700, color: Colors.white);
+      fontSize: 36,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    );
     TextStyle descTs = TextStyle(
-      fontFamily: 'SingleDay',
-      fontSize: 30,
+      fontWeight: FontWeight.w700,
+      fontSize: 24,
       color: Colors.amber[50],
     );
     TextStyle timeTs = TextStyle(
@@ -98,27 +101,48 @@ class QuestionBoard extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      DataUtils.getStringFromThemeCode(
-                                          question.theme),
-                                      style: titleTs,
-                                    ),
-                                    SizedBox(
-                                      height: 16,
-                                    ),
-                                    DataUtils.changeDeepToIcon(
-                                      question.deep,
-                                    ),
-                                  ],
-                                ),
+                              const SizedBox(
+                                height: 16,
                               ),
                               Expanded(
-                                  flex: 3,
-                                  child: Text(question.asking, style: descTs)),
+                                flex: 6,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(32),
+                                  ),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            DataUtils.getStringFromThemeCode(
+                                                question.theme),
+                                            style: titleTs,
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          DataUtils.changeDeepToIcon(
+                                            question.deep,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Text(
+                                        question.asking,
+                                        style: descTs,
+                                      ),
+                                    )
+                                  ]),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -275,7 +299,6 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
                     } else {
                       passTicket--;
                       updatePassTicket(ticket: passTicket);
-                      // FirebaseManager().updateUserDB(nowUser!);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }

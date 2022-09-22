@@ -22,7 +22,7 @@ import 'package:meetqa/common/manager/sign_manager.dart';
 class GameScreen extends StatefulWidget {
   final String me;
   final String you;
-  final askCate category;
+  final String category;
   final List<QuestionModel> questions;
   const GameScreen({
     Key? key,
@@ -163,7 +163,7 @@ class _GameScreenState extends State<GameScreen>
                   children: [
                     !isBallsOpen
                         ? BallBottle(
-                            category: widget.category.toString(),
+                            category: widget.category,
                             questions: questions,
                             colors: colors,
                             onTapBall: onTapBall,
