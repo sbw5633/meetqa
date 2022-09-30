@@ -61,22 +61,65 @@ class DataUtils {
   //   }
   // }
 
-  static Widget changeDeepToIcon(int deep) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-            deep,
-            (index) => const Icon(
-                  Icons.star_rate_rounded,
-                  size: 20,
-                  color: Color(0xFFFFE082),
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.white38,
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                    )
-                  ],
-                )));
+  Widget changeDeepToIcon(int deep) {
+    //deep이 3보다 높으면 두줄로 표시
+    bool overThree = deep > 3 ? true : false;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: getDeepIcon(deep, overThree)),
+        if (overThree)
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: getDeepIcon(deep - 3, false))
+      ],
+    );
+  }
+
+  List<Widget> getDeepIcon(int maxNo, bool overThree) {
+    int _maxNo = overThree ? 3 : maxNo;
+    return List.generate(
+        _maxNo,
+        (index) => const Icon(
+              Icons.star_rate_rounded,
+              size: 20,
+              color: Color(0xFFFFE082),
+              shadows: [
+                BoxShadow(
+                  color: Colors.white38,
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                )
+              ],
+            )).toList();
+  }
+
+  Widget changeThemeToIcon(QuestionTheme theme) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(),
+      ),
+      child: getThemeIcon(theme),
+    );
+  }
+
+  dynamic getThemeIcon(QuestionTheme theme) {
+    switch (theme) {
+      case QuestionTheme.LOVE:
+        return Text("❤️");
+      case QuestionTheme.DAILY_LIFE:
+        return Icon(Icons.date_range_outlined);
+      case QuestionTheme.FAMILY:
+        return Icon(Icons.family_restroom);
+      case QuestionTheme.FRIENDSHIP:
+        return Icon(Icons.person);
+      case QuestionTheme.WEDDING:
+        return Text('👰‍♀️');
+      case QuestionTheme.ETC:
+        return Text('🌐');
+    }
   }
 }

@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:meetqa/common/view/splash_screen.dart';
-import 'package:meetqa/common/const/user_id.dart';
+import 'package:meetqa/common/view/loading_screen.dart';
+import 'package:meetqa/common/const/user_info.dart';
+import 'package:meetqa/screen/splash_screen.dart';
+import 'package:meetqa/screen/welcome_screen.dart';
 import 'package:meetqa/screen/home_screen.dart';
-import 'package:meetqa/screen/login_screen.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
 
 class AuthService {
@@ -14,19 +15,14 @@ class AuthService {
     return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SplashScreen();
-          }
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              !snapshot.hasData) {
+            return const SplashScreen(endSplash: true);
+          } else {
             print("home date: ${snapshot.data}");
             print("go home");
             currentUser = snapshot.data;
-            return HomeScreen();
-          } else {
-            //로그인스크린에서 체크유저 및 가입, db등록까지 완료해야됨
-            print("login date: ${snapshot.data}");
-            print("go login");
-            return const LoginScreen();
+            return const WelcomeScreen();
           }
         }));
   }

@@ -3,7 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/component/will_pop_scope.dart';
 import 'package:meetqa/common/const/ad_id.dart';
-import 'package:meetqa/common/const/user_id.dart';
+import 'package:meetqa/common/const/user_info.dart';
 import 'package:meetqa/question/model/question_model.dart';
 import 'package:meetqa/common/util/data_utils.dart';
 import 'package:meetqa/z_not_use/firebase_manager.dart';
@@ -127,7 +127,7 @@ class QuestionBoard extends StatelessWidget {
                                           const SizedBox(
                                             height: 16,
                                           ),
-                                          DataUtils.changeDeepToIcon(
+                                          DataUtils().changeDeepToIcon(
                                             question.deep,
                                           ),
                                         ],

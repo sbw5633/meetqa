@@ -24,24 +24,6 @@ enum QuestionTheme {
   ETC,
 }
 
-// enum QuestionTag {
-//   //이걸굳이?
-//   WHAT_IS_THIS,
-//   //19
-//   ADULT,
-//   //첫만남
-//   FIRST_MEET,
-//   //아직어색해
-//   AWKWARD,
-//   //언어
-//   LANGUAGE,
-//   //공부
-//   STUDY,
-//   //취미
-//   HOBBY,
-//   //
-// }
-
 @HiveType(typeId: 1)
 class QuestionModel {
   @HiveField(0)

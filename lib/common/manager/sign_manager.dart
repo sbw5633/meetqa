@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
-import 'package:meetqa/common/const/user_id.dart';
+import 'package:meetqa/common/const/user_info.dart';
 import 'package:meetqa/user/model/user_model.dart';
 import 'package:meetqa/common/manager/auth_service.dart';
 

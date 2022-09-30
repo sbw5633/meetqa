@@ -147,7 +147,7 @@ class BuiltBall extends StatelessWidget {
                 height: 10,
               ),
               Text(DataUtils.getStringFromThemeCode(question.theme)),
-              DataUtils.changeDeepToIcon(question.deep),
+              DataUtils().changeDeepToIcon(question.deep),
             ],
           ),
           SizedBox(

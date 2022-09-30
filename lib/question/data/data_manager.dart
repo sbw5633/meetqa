@@ -10,6 +10,7 @@ class DataManager {
   final checkBox = Hive.box("DataVersion");
 
   Future<void> getDataFlow() async {
+    print("in getDataFlow");
     excel = await getExcelDatas(); //엑셀 데이터 통째로 저장
 
     for (String table in excel.tables.keys) {

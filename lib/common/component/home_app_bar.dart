@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
-import 'package:meetqa/common/const/user_id.dart';
+import 'package:meetqa/common/const/user_info.dart';
 import 'package:meetqa/common/manager/sign_manager.dart';
 
 class HomeAppBar extends StatefulWidget {

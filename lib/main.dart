@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/const/ad_id.dart';
@@ -11,6 +12,7 @@ import 'package:meetqa/question/model/category_card_model.dart';
 import 'package:meetqa/question/model/question_model.dart';
 
 import 'package:meetqa/common/manager/auth_service.dart';
+import 'package:meetqa/screen/splash_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -41,11 +43,19 @@ Future<void> main() async {
   bannerAdID = Platform.isIOS ? bannerAdTestIDonIOS : bannerAdTestIDonAndroid;
   rewardAdID = Platform.isIOS ? rewardAdTestIDonIOS : rewardAdTestIDonAndroid;
 
-  runApp(MaterialApp(
-    theme: ThemeData(fontFamily: 'Pretendard'),
-    debugShowCheckedModeBanner: false, home: AuthService().handleAuthState(),
-    // Matrix4Test()
-    // LoginScreen()
-    // AuthService().handleAuthState()
-  ));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]) // 가로모드 비허용
+      .then((_) => runApp(MaterialApp(
+            theme: ThemeData(fontFamily: 'Pretendard'),
+            debugShowCheckedModeBanner: false,
+            home: SplashScreen(
+              endSplash: false,
+            ),
+            // AuthService().handleAuthState(),
+            // Matrix4Test()
+            // LoginScreen()
+            // AuthService().handleAuthState()
+          )));
 }

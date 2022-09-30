@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/component/home_app_bar.dart';
 import 'package:meetqa/common/component/will_pop_scope.dart';
 import 'package:meetqa/common/const/category_data.dart';
-import 'package:meetqa/common/const/user_id.dart';
+import 'package:meetqa/common/const/user_info.dart';
 import 'package:meetqa/common/manager/sign_manager.dart';
+import 'package:meetqa/common/model/person_model.dart';
 import 'package:meetqa/question/data/data_manager.dart';
 import 'package:meetqa/question/model/category_card_model.dart';
-import 'package:meetqa/screen/data_load_screen.dart';
+import 'package:meetqa/question/model/question_model.dart';
+import 'package:meetqa/screen/game_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -22,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   ScrollController scrollController = ScrollController();
 
   DateTime? currentBackPressTime;
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -77,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<bool> fetchData() async {
-    await Future.wait([DataManager().getDataFlow(), getUserData()]);
+    await getUserData();
 
     // await DataManager().getDataFlow();
     return true;
@@ -143,10 +150,40 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  moveGameScreen(context, CategoryCardModel category) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => DataLoadScreen(cateModel: category),
-    ));
+  // moveGameScreen(context, CategoryCardModel category) {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //     builder: (_) => DataLoadScreen(cateModel: category),
+
+  //   ));
+  // }
+
+  moveGameScreen(context, CategoryCardModel category) async {
+    if (!isLoading) {
+      isLoading = true;
+      List<QuestionModel> questions = await getQuestions(category);
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => GameScreen(
+                category: category.parstCateToEng(),
+                questions: questions,
+              )));
+      isLoading = false;
+    } else {
+      return;
+    }
+  }
+
+  Future<List<QuestionModel>> getQuestions(CategoryCardModel category) {
+    final box =
+        Hive.box<QuestionModel>("Question_${category.parstCateToEng()}");
+
+    List<QuestionModel> _questions = [];
+
+    for (QuestionModel q in box.values) {
+      _questions.add(q);
+    }
+
+    return Future.value(_questions);
   }
 }
 
