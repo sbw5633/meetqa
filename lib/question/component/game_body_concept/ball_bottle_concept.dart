@@ -90,7 +90,6 @@ class _BallBottleConceptState extends State<BallBottleConcept> {
   List<int> data = List.generate(6, (index) => index);
 
   List<Widget> list() {
-    GameScreenState.isAni = true;
     const double firstItemAngle = pi;
     const double lastItemAngle = pi;
     const double angleDiff = (firstItemAngle + lastItemAngle) / 6; //한 써클 원 갯수
@@ -98,7 +97,6 @@ class _BallBottleConceptState extends State<BallBottleConcept> {
 
     //애니메이션 진행동안 다른동작 막기
     Future.delayed(Duration(seconds: 2), () {
-      GameScreenState.isAni = false;
       print("isAni: false");
     });
 

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_size/flutter_keyboard_size.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meetqa/common/component/unit/app_bar_bg.dart';
 import 'package:meetqa/common/component/will_pop_scope.dart';
+import 'package:meetqa/common/const/path.dart';
 import 'package:meetqa/common/model/person_model.dart';
 import 'package:meetqa/common/const/colors.dart';
 import 'package:meetqa/common/const/const_no.dart';
@@ -13,6 +16,8 @@ import 'package:meetqa/question/model/question_model.dart';
 import 'package:meetqa/common/manager/ad_manager.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
 import 'package:meetqa/common/manager/sign_manager.dart';
+import 'package:meetqa/screen/component/game_screen/appbar_widgets.dart';
+import 'package:meetqa/screen/component/game_screen/part_body.dart';
 
 class GameScreen extends StatefulWidget {
   final String category;
@@ -25,13 +30,12 @@ class GameScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<GameScreen> createState() => GameScreenState();
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-class GameScreenState extends State<GameScreen>
+class _GameScreenState extends State<GameScreen>
     with SingleTickerProviderStateMixin {
   // late AnimationController _controller;
-  bool questionTime = false;
   late List<QuestionModel> questions = widget.questions;
   late List<LinearGradient> colors = [];
   static int turn = 1;
@@ -40,16 +44,8 @@ class GameScreenState extends State<GameScreen>
 
   int reloadLimit = 1;
 
-  late PersonModel asker;
-  late PersonModel respondent;
-
-  static bool isAni = false;
-
   @override
   initState() {
-    asker = user[turn ~/ 2];
-    respondent = user[turn ~/ 2 + 1];
-
     shuffleData();
 
     super.initState();
@@ -63,7 +59,7 @@ class GameScreenState extends State<GameScreen>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("currentUser? $currentUser");
+    debugPrint("nowUser? $nowUser");
     debugPrint("question갯수: ${questions.length}");
 
     // bool isTagSecret = true;
@@ -73,21 +69,36 @@ class GameScreenState extends State<GameScreen>
         questions.length >= defaultSelNo ? defaultSelNo : questions.length;
 
     // 다음 선택지로 나올 question({nextSelNo} 개)
-    List<QuestionModel> nextQuestions = questions.getRange(0, 5).toList();
+    List<QuestionModel> nextQuestions =
+        questions.getRange(0, nextSelNo).toList();
 
     return WillPopScope(
-      onWillPop:
-          OnWillPopController(wantExit: false, isAni: isAni).backCtlChange,
+      onWillPop: OnWillPopController(wantExit: false).backCtlChange,
       child: SafeArea(
         child: Scaffold(
-            backgroundColor: PRIMARY_COLOR,
-            appBar: _AppBar(),
+            backgroundColor: Colors.white,
+            appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 4.0, left: 2, right: 2),
+                  child: CustomAppBar(),
+                )),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  // flex: 10,
-                  child: goDiaryConcept(questions: nextQuestions),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 4, left: 2, right: 2),
+                    child: Game_Body(
+                      questions: nextQuestions,
+                      cate: widget.category,
+                      turn: turn,
+                      onTapReLoad: onTapReLoad,
+                      nextTurn: nextTurn,
+                    ),
+                  ),
+                  // goDiaryConcept(questions: nextQuestions),
                   // goBallConcept(),
                 ),
                 const _BottomContainer(),
@@ -98,10 +109,13 @@ class GameScreenState extends State<GameScreen>
   }
 
   void onTapReLoad() {
+    if (reloadLimit <= 0) {
+      flutterToast("이번 턴에는 더 이상 다시 불러올 수 없습니다.");
+      return;
+    }
     reloadLimit--;
     setState(() {
       // _controller.forward();
-      questionTime = false;
       shuffleData();
     });
   }
@@ -111,11 +125,7 @@ class GameScreenState extends State<GameScreen>
     // _controller.stop();
     shuffleData();
 
-    isAni = true;
-
-    setState(() {
-      questionTime = true;
-    });
+    setState(() {});
   }
 
   void shuffleData() {
@@ -138,91 +148,38 @@ class GameScreenState extends State<GameScreen>
 
     questions.remove(question);
     shuffleData();
-    PersonModel tempVal = asker;
-    asker = respondent;
-    respondent = tempVal;
+    turn++;
+
     reloadLimit = initReloadTimes;
 
-    questionTime = false;
     // _controller.forward();
     setState(() {});
   }
 
-  AppBar _AppBar() {
-    return AppBar(
-      flexibleSpace: appBarBG(),
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-          onPressed: () {
-            if (isAni) {
-              flutterToast("잠시 후 다시 시도해주세요.");
-              return;
-            }
+  // Widget goBallConcept() {
+  //   return BallBottleConcept(
+  //     questionTime: questionTime,
+  //     category: widget.category,
+  //     questions: questions,
+  //     colors: colors,
+  //     onTapBall: onTapBall,
+  //     onTapReLoad: onTapReLoad,
+  //     reloadLimit: reloadLimit,
+  //     asker: asker,
+  //     respondent: respondent,
+  //     nextTurn: nextTurn,
+  //   );
+  // }
 
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(
-            Icons.home,
-            size: 30,
-          )),
-      actions: [
-        currentUser == null
-            ? OutlinedButton(
-                onPressed: () async {
-                  try {
-                    await SignManager().signIn();
-                    if (currentUser != null) {
-                      setState(() {});
-                    } else {
-                      flutterToast("로그인에 실패했습니다.");
-                    }
-                  } catch (e) {
-                    flutterToast("로그인에 실패했습니다.");
-                  }
-                },
-                child: Text(
-                  "계정 연동",
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            : OutlinedButton(
-                onPressed: () async {
-                  await SignManager().signOut();
-                  setState(() {});
-                },
-                child: Text(
-                  "로그아웃",
-                  style: TextStyle(color: Colors.white),
-                ))
-      ],
-      title: Image.asset('assets/images/logo/logo_ho.png'),
-    );
-  }
-
-  Widget goBallConcept() {
-    return BallBottleConcept(
-      questionTime: questionTime,
-      category: widget.category,
-      questions: questions,
-      colors: colors,
-      onTapBall: onTapBall,
-      onTapReLoad: onTapReLoad,
-      reloadLimit: reloadLimit,
-      asker: asker,
-      respondent: respondent,
-      nextTurn: nextTurn,
-    );
-  }
-
-  Widget goDiaryConcept({required List<QuestionModel> questions}) {
-    return DiaryConcept(
-      asker: asker,
-      reply: respondent,
-      questions: questions,
-      colors: colors,
-      nextTurn: nextTurn,
-    );
-  }
+  // Widget goDiaryConcept({required List<QuestionModel> questions}) {
+  //   return DiaryConcept(
+  //     asker: asker,
+  //     reply: respondent,
+  //     questions: questions,
+  //     colors: colors,
+  //     nextTurn: nextTurn,
+  //   );
+  // }
 }
 
 class _BottomContainer extends StatefulWidget {
@@ -256,20 +213,6 @@ class _BottomContainerState extends State<_BottomContainer> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // ElevatedButton(
-        //   onPressed: () async {
-        //     // print("chance!");
-        //     // await showDialog(
-        //     //     context: context,
-        //     //     builder: ((context) {
-        //     //       return ChanceCard();
-        //     //     }));
-        //     // setState(() {
-        //     //   print("ab");fedf
-        //     // });
-        //   },
-        //   child: Text("질문자 찬스"),
-        // ),
         FutureBuilder<dynamic>(
             future: loadBannerAd(),
             builder: (context, snapshot) {

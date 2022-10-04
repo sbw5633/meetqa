@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
+import 'package:meetqa/common/const/path.dart';
 import 'package:meetqa/common/const/user_info.dart';
 import 'package:meetqa/common/manager/sign_manager.dart';
 
@@ -21,14 +22,14 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       flexibleSpace: Stack(children: [
-        Image.asset(
-          "assets/images/logo/logo_bgcolor.png",
-          fit: BoxFit.cover,
-          height: double.infinity,
-          width: double.infinity,
-        ),
+        // Image.asset(
+        //   "assets/images/logo/logo_bgcolor.png",
+        //   fit: BoxFit.cover,
+        //   height: double.infinity,
+        //   width: double.infinity,
+        // ),
         FlexibleSpaceBar(
           background: SafeArea(
             child: Container(
@@ -38,7 +39,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
         ),
       ]),
-      expandedHeight: 400,
+      //펼쳐졌을 때 최대 크기
+      expandedHeight: 200,
       floating: true,
       pinned: true,
       stretch: true,
@@ -75,13 +77,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget titleLogo() {
     if (widget.isExpanded) {
       return Image.asset(
-        "assets/images/logo/logo_v.png",
+        LOGO_V,
+        fit: BoxFit.contain,
       );
     } else {
       return Image.asset(
-        "assets/images/logo/logo_h.png",
-        width: 200,
-        height: 200,
+        LOGO_H,
       );
     }
   }

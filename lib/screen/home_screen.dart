@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         // 앱이 이 상태에 있으면 엔진이 "View"없이 실행됩니다.
         // 엔진이 처음 초기화 될 때 "View" 연결 진행 중이거나 네비게이터 팝으로 인해 "View"가 파괴 된 후 일 수 있습니다.
         print("detached");
-        if (currentUser != null) {
+        if (nowUser != null) {
           SignManager().ticketSave();
         }
 
@@ -102,18 +102,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> getUserData() async {
-    print("currentUser: $currentUser");
-    if (currentUser != null) {
+    print("nowUser: $nowUser");
+    if (nowUser != null) {
       await SignManager().setNowUser();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final double cardSize = MediaQuery.of(context).size.width < 600
-        ? (MediaQuery.of(context).size.width * 0.7)
-        : (MediaQuery.of(context).size.width / 2 * 0.7);
-
     return WillPopScope(
       onWillPop: OnWillPopController(wantExit: true).backCtlChange,
       child: FutureBuilder<bool>(
@@ -124,7 +120,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 body: CustomScrollView(
               controller: scrollController,
               slivers: [
+                //앱바 (펼쳐짐)
                 HomeAppBar(isExpanded: isExpanded, isLoaded: snapshot.data),
+                //sliver내에서 Column위젯 넣기 위해 SliverToBoxAdapter 사용
                 SliverToBoxAdapter(
                   child: Column(children: [
                     const SizedBox(
@@ -136,7 +134,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           padding: const EdgeInsets.only(top: 10.0),
                           child: DefaultCard(
                             onTap: moveGameScreen,
-                            cardSize: cardSize,
                             category: e,
                           ),
                         );
@@ -189,12 +186,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
 class DefaultCard extends StatelessWidget {
   final onTap;
-  final double cardSize;
   final CategoryCardModel category;
   DefaultCard({
     Key? key,
     required this.onTap,
-    required this.cardSize,
     required this.category,
   }) : super(key: key);
 
@@ -205,10 +200,9 @@ class DefaultCard extends StatelessWidget {
       child: InkWell(
         onTap: () => onTap(context, category),
         child: Container(
-            height: cardSize,
-            width: cardSize,
+            // height: cardSize,
+            // width: cardSize,
             decoration: BoxDecoration(
-              border: Border.all(color: category.backgroundColor),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Stack(
@@ -216,7 +210,8 @@ class DefaultCard extends StatelessWidget {
                 Image.asset(
                   category.imgPath,
                 ),
-                Text(category.parstCateToString()),
+                Text(CategoryCardModel.parstCateToString(
+                    category.category.name)),
               ],
             )),
       ),

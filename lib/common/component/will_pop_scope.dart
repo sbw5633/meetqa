@@ -8,17 +8,11 @@ import 'package:meetqa/common/manager/sign_manager.dart';
 
 class OnWillPopController {
   static DateTime? currentBackPressTime;
-  bool? isAni;
   bool wantExit;
 
-  OnWillPopController({required this.wantExit, this.isAni});
+  OnWillPopController({required this.wantExit});
 
   Future<bool> backCtlChange() {
-    if (isAni != null && isAni!) {
-      flutterToast("다시 시도해주세요.");
-      return Future.value(false);
-    }
-
     debugPrint("currentBackPressTime: $currentBackPressTime");
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
@@ -32,7 +26,7 @@ class OnWillPopController {
     }
 
     if (wantExit) {
-      if (currentUser != null) {
+      if (nowUser != null) {
         SignManager().ticketSave();
       }
       SystemNavigator.pop();

@@ -47,6 +47,7 @@ class DataManager {
             }
           }
         }
+
         QuestionModel question = QuestionModel(
           index: tempData[0],
           theme: QuestionModel.parseQuestionTheme(tempData[1]),

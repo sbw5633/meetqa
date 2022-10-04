@@ -231,7 +231,7 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
   }
 
   void refleshTicket() {
-    if (currentUser != null) {
+    if (nowUser != null) {
       setState(() {
         passTicket = box.get("passTicket");
       });
@@ -245,7 +245,7 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
     return AlertDialog(
       scrollable: true,
       title: Text(
-        currentUser == null ? "guest사용자입니다." : "보유중인 패스권: $passTicket개",
+        nowUser == null ? "guest사용자입니다." : "보유중인 패스권: $passTicket개",
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
         textAlign: TextAlign.center,
       ),
@@ -285,7 +285,7 @@ class __SkipButtonAlertState extends State<_SkipButtonAlert> {
               ],
             )),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          currentUser == null
+          nowUser == null
               ? TextButton(
                   onPressed: () async {
                     await SignManager().signIn();

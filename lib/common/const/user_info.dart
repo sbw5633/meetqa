@@ -9,3 +9,6 @@ UserModel? nowUser;
 User? currentUser;
 
 List<PersonModel> user = [];
+
+String initName1 = '나';
+String initName2 = '너';

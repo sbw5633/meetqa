@@ -11,8 +11,8 @@ import 'package:meetqa/common/const/category_data.dart';
 import 'package:meetqa/question/model/category_card_model.dart';
 import 'package:meetqa/question/model/question_model.dart';
 
-import 'package:meetqa/common/manager/auth_service.dart';
 import 'package:meetqa/screen/splash_screen.dart';
+import 'package:meetqa/user/model/user_model.dart';
 
 import 'firebase_options.dart';
 
@@ -23,6 +23,7 @@ Future<void> main() async {
 
   Hive.registerAdapter<QuestionModel>(QuestionModelAdapter());
   Hive.registerAdapter<QuestionTheme>(QuestionThemeAdapter());
+  Hive.registerAdapter<UserModel>(UserModelAdapter());
 
   for (CategoryCardModel cateModel in cateLists) {
     // await Hive.openBox<QuestionModel>('Question_${cateModel.parseCateToKor()}');
@@ -43,19 +44,19 @@ Future<void> main() async {
   bannerAdID = Platform.isIOS ? bannerAdTestIDonIOS : bannerAdTestIDonAndroid;
   rewardAdID = Platform.isIOS ? rewardAdTestIDonIOS : rewardAdTestIDonAndroid;
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]) // 가로모드 비허용
       .then((_) => runApp(MaterialApp(
-            theme: ThemeData(fontFamily: 'Pretendard'),
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen(
-              endSplash: false,
-            ),
-            // AuthService().handleAuthState(),
-            // Matrix4Test()
-            // LoginScreen()
-            // AuthService().handleAuthState()
+          theme: ThemeData(fontFamily: 'Pretendard'),
+          debugShowCheckedModeBanner: false,
+          home: SplashScreen()
+          // AuthService().handleAuthState(),
+          // Matrix4Test()
+          // LoginScreen()
+          // AuthService().handleAuthState()
           )));
 }

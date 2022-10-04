@@ -10,19 +10,26 @@ class SignManager {
   static AuthService serv = AuthService();
 
   Future<void> signIn() async {
+    final box = Hive.box('UserData');
+
     try {
       currentUser = await serv.signInWithGoogle();
 
-      if (currentUser == null) {
-        return;
-      }
+      // if (currentUser == null) {
+      //   return;
+      // }
 
-      await checkUserAtDB();
+      if (currentUser != null) {
+        final _nowUser = await checkUserAtDB();
+        box.put('nowUser', _nowUser);
 
-      if (currentUser == null) {
-        nowUser = await signUp();
+        nowUser = _nowUser;
+
+        ticketSetter();
+
+        print("록읜 후 nowUser: $nowUser");
       } else {
-        SignManager().setNowUser();
+        return;
       }
     } catch (e) {
       debugPrint("signIn Error! $e");
@@ -34,13 +41,15 @@ class SignManager {
   void ticketSetter() {
     final box = Hive.box("UserData");
 
-    print("티켓 box: ${box.keys}");
+    print("hi box? :${box.keys}");
+    print("box.get? :${box.get('saved')}");
 
     //신규 유저(noLocalData) 또는 이전 종료가 정상종료였으면 fb에서 받아옴
     if (box.get("saved") == null || box.get("saved") == "saved") {
       box.put("passTicket", nowUser!.passTicket);
       box.put("saved", "get");
     }
+    print("티켓 box: ${box.keys}");
   }
 
   Future<void> ticketSave() async {
@@ -59,14 +68,16 @@ class SignManager {
     print("signOut box: ${Hive.box("UserData").values}");
 
     await ticketSave();
-    currentUser = await serv.signOut();
-    nowUser = null;
+    nowUser = await serv.signOut();
+    currentUser = null;
+    final box = Hive.box('UserData');
+    box.put('nowUser', nowUser);
     userName = "guest";
   }
 
   Future<void> guest() async {
-    currentUser = await serv.guestUser();
-    nowUser = null;
+    nowUser = await serv.guestUser();
+    currentUser = null;
     userName = "guest";
   }
 
@@ -86,37 +97,38 @@ class SignManager {
         .doc(_newUser.uid)
         .set(_newUser.toMap());
 
-    ticketSetter();
-
     return _newUser;
   }
 
-  Future<void> checkUserAtDB() async {
+  Future<UserModel?> checkUserAtDB() async {
     final userDB = await FirebaseFirestore.instance.collection('User').get();
+
+    UserModel? _nowUser;
 
     //기존 DB에 있을 경우 받아오고, 없으면 신규 가입
     if (userDB.docs.where((db) {
       debugPrint("checkUserAtDB 들어옴3: ${currentUser!.email}");
       return db["userID"] == currentUser!.email;
     }).isNotEmpty) {
-      setNowUser();
+      _nowUser = await setNowUser();
     } else {
       debugPrint("썌유쪄");
-      return;
+      _nowUser = await signUp();
     }
+
+    return _nowUser;
   }
 
   //로그인 하면 nowUser 셋팅
-  Future<void> setNowUser() async {
+  Future<UserModel> setNowUser() async {
     final _user =
         await FirebaseFirestore.instance.doc("User/${currentUser!.uid}").get();
 
-    nowUser = UserModel.fromDB(
+    final UserModel _nowUser = UserModel.fromDB(
       _user.data()!,
     );
+    print("_nowuser?: $_nowUser");
 
-    print("록읜 후 nowUser: $nowUser");
-
-    ticketSetter();
+    return _nowUser;
   }
 }

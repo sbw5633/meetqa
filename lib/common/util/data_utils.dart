@@ -62,6 +62,12 @@ class DataUtils {
   // }
 
   Widget changeDeepToIcon(int deep) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: getDeepIcon(deep, false));
+  }
+
+  Widget changeDeepToIconTwoRow(int deep) {
     //deep이 3보다 높으면 두줄로 표시
     bool overThree = deep > 3 ? true : false;
     return Column(

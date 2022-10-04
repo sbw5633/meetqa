@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user_question.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: 1)
+@HiveType(typeId: 3)
 class UserQuestion {
   @HiveField(0)
   final int idx;

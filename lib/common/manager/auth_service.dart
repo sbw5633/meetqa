@@ -3,29 +3,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:meetqa/common/view/loading_screen.dart';
-import 'package:meetqa/common/const/user_info.dart';
-import 'package:meetqa/screen/splash_screen.dart';
-import 'package:meetqa/screen/welcome_screen.dart';
-import 'package:meetqa/screen/home_screen.dart';
 import 'package:meetqa/common/component/flutter_toast.dart';
+import 'package:meetqa/user/model/user_model.dart';
 
 class AuthService {
-  handleAuthState() {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              !snapshot.hasData) {
-            return const SplashScreen(endSplash: true);
-          } else {
-            print("home date: ${snapshot.data}");
-            print("go home");
-            currentUser = snapshot.data;
-            return const WelcomeScreen();
-          }
-        }));
-  }
+  // handleAuthState() {
+  //   return StreamBuilder<User?>(
+  //       stream: FirebaseAuth.instance.authStateChanges(),
+  //       builder: ((context, snapshot) {
+  //         // if (snapshot.connectionState == ConnectionState.waiting ||
+  //         //     !snapshot.hasData) {
+  //         //   return const SplashScreen(endSplash: true);
+  //         // } else {
+  //         if (snapshot.hasData) {
+  //           // currentUser = snapshot.data;
+  //           return const WelcomeScreen();
+  //         } else
+  //           return SplashScreen(endSplash: false);
+  //         // }
+  //       }));
+  // }
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -45,7 +42,7 @@ class AuthService {
       User? _user = FirebaseAuth.instance.currentUser;
 
       if (_user != null) {
-        FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+        // FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
         return _user;
       } else {
@@ -58,12 +55,13 @@ class AuthService {
     return null;
   }
 
-  Future<User?> signOut() async {
+  Future<UserModel?> signOut() async {
     await FirebaseAuth.instance.signOut();
+
     return await guestUser();
   }
 
-  Future<User?> guestUser() async {
+  Future<UserModel?> guestUser() async {
     // await FirebaseAuth.instance.signInAnonymously();
     // final _user = FirebaseAuth.instance.currentUser;
     // if (_user!.isAnonymous) {

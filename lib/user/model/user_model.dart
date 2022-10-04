@@ -1,10 +1,22 @@
+import 'package:hive_flutter/hive_flutter.dart';
+
+part 'user_model.g.dart';
+
+@HiveType(typeId: 4)
 class UserModel {
+  @HiveField(0)
   final String uid;
+  @HiveField(1)
   final String? userID;
+  @HiveField(2)
   final String? userName;
+  @HiveField(3)
   final int passTicket;
+  @HiveField(4)
   final int point;
+  @HiveField(5)
   final String? phoneNumber;
+  @HiveField(6)
   final String? photoURL;
 
   UserModel({

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetqa/common/const/path.dart';
 
 enum askCate {
   FirstMeet,
@@ -11,13 +12,30 @@ enum askCate {
 class CategoryCardModel {
   final askCate category;
   final String imgPath;
-  final Color backgroundColor;
 
   CategoryCardModel({
     required this.category,
     required this.imgPath,
-    required this.backgroundColor,
   });
+
+  factory CategoryCardModel.fromAskCate({required askCate cate}) {
+    return CategoryCardModel(category: cate, imgPath: getImgPath(cate));
+  }
+
+  static String getImgPath(askCate cate) {
+    switch (cate) {
+      case askCate.FirstMeet:
+        return '$MENU_ICON_PATH/FirstMeet.png';
+      case askCate.KnowPeople:
+        return '$MENU_ICON_PATH/KnowPeople.png';
+      case askCate.StartCouple:
+        return '$MENU_ICON_PATH/StartCouple.png';
+      case askCate.LongtimeCouple:
+        return '$MENU_ICON_PATH/LongtimeCouple.png';
+      case askCate.Married:
+        return '$MENU_ICON_PATH/Married.png';
+    }
+  }
 
   askCate parseCateToEnum(String cate) {
     switch (cate) {
@@ -36,19 +54,20 @@ class CategoryCardModel {
     }
   }
 
-  String parstCateToString() {
-    askCate cate = category;
+  static String parstCateToString(String cate) {
     switch (cate) {
-      case askCate.FirstMeet:
+      case 'FirstMeet':
         return "첫 만남";
-      case askCate.KnowPeople:
+      case 'KnowPeople':
         return "아는 사이";
-      case askCate.StartCouple:
+      case 'StartCouple':
         return "시작하는 연인";
-      case askCate.LongtimeCouple:
+      case 'LongtimeCouple':
         return "오래된 연인";
-      case askCate.Married:
+      case 'Married':
         return "부부";
+      default:
+        return "";
     }
   }
 
