@@ -77,10 +77,10 @@ class _GameScreenState extends State<GameScreen>
       child: SafeArea(
         child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: const PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
+            appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 4.0, left: 2, right: 2),
+                  padding: const EdgeInsets.only(top: 4.0, left: 2, right: 2),
                   child: CustomAppBar(),
                 )),
             body: Column(

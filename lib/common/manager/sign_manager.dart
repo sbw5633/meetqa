@@ -9,7 +9,7 @@ import 'package:meetqa/common/manager/auth_service.dart';
 class SignManager {
   static AuthService serv = AuthService();
 
-  Future<void> signIn() async {
+  Future<bool> signIn() async {
     final box = Hive.box('UserData');
 
     try {
@@ -28,13 +28,17 @@ class SignManager {
         ticketSetter();
 
         print("록읜 후 nowUser: $nowUser");
+
+        return true;
       } else {
-        return;
+        return false;
       }
     } catch (e) {
       debugPrint("signIn Error! $e");
 
       flutterToast("로그인에 실패했습니다.");
+
+      return false;
     }
   }
 

@@ -101,9 +101,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       children: [
                         Expanded(
                           flex: 9,
-                          child: Stack(
+                          child:
+                              // Lottie.asset('assets/lottie/75943-sample.json'),
+                              // Lottie.asset('assets/lottie/test_lottie.json'),
+                              Stack(
                             children: [
-                              // Lottie.asset('assets/lottie/data.json'),
                               Image.asset(
                                 'assets/images/main_bg.jpg',
                                 fit: BoxFit.cover,

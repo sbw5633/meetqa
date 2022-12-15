@@ -8,19 +8,34 @@ class CustomAppBar extends StatefulWidget {
   const CustomAppBar({Key? key}) : super(key: key);
 
   @override
-  State<CustomAppBar> createState() => _CustomAppBarState();
+  State<CustomAppBar> createState() => CustomAppBarState();
+
+  static CustomAppBarState? of(BuildContext context) =>
+      context.findAncestorStateOfType<CustomAppBarState>();
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class CustomAppBarState extends State<CustomAppBar> {
+  String _string = "please input text";
+
+  set string(String value) => setState(() => _string = value);
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(flex: 1, child: DefaultAppBarBox(part: _partLeading())),
         Expanded(flex: 2, child: DefaultAppBarBox(part: _partTitle())),
-        Expanded(flex: 1, child: DefaultAppBarBox(part: _partAction()))
+        Expanded(flex: 1, child: DefaultAppBarBox(part: _partAction())),
+        Text(_string),
       ],
     );
+  }
+
+  void isReflesh() {
+    print("join");
+    setState(() {
+      print("setState Appbar");
+    });
   }
 
   Widget _partAction() {
