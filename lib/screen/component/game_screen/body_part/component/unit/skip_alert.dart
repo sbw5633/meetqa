@@ -123,8 +123,8 @@ class _SkipButtonAlertState extends State<SkipButtonAlert> {
               onPressed: () {
                 // CustomAppBar.of(context)!.isReflesh();
 
-                // Navigator.of(context).pop(false);
-                isLogined();
+                Navigator.of(context).pop(false);
+                // isLogined();
               },
               child: const Text("취소")), //취소버튼
         ])

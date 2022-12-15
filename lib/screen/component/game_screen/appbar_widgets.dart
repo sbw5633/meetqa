@@ -26,7 +26,7 @@ class CustomAppBarState extends State<CustomAppBar> {
         Expanded(flex: 1, child: DefaultAppBarBox(part: _partLeading())),
         Expanded(flex: 2, child: DefaultAppBarBox(part: _partTitle())),
         Expanded(flex: 1, child: DefaultAppBarBox(part: _partAction())),
-        Text(_string),
+        // Text(_string),
       ],
     );
   }
